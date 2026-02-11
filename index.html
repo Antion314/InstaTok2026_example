@@ -3,46 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>InstaTok Demo</title>
+    <title>InstaTok Demo (Beispiel)</title>
     <style>
-        /* --- EXAKT GLEICHES DESIGN WIE HAUPT-APP --- */
-        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #fafafa; color: #262626; height: 100vh; display: flex; flex-direction: column; overflow: hidden; -webkit-tap-highlight-color: transparent; }
-        header { padding: 20px; display: flex; justify-content: center; align-items: center; background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent); position: absolute; top: 0; width: 100%; z-index: 10; pointer-events: none; }
-        .tab-bar { display: flex; gap: 20px; font-weight: 700; font-size: 1.1rem; text-shadow: 0 1px 3px rgba(0,0,0,0.3); color: rgba(255,255,255,0.7); }
-        .active-tab { color: #fff; border-bottom: 2px solid #fff; padding-bottom: 4px; }
+        /* --- HELLES SOCIAL MEDIA DESIGN (Original Simulation Styles) --- */
+        body {
+            margin: 0; padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #fafafa;
+            color: #262626;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Header (Transparent mit Tabs) */
+        header {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
+            position: absolute; /* Über dem Bild */
+            top: 0; width: 100%; z-index: 10;
+            pointer-events: none;
+            box-sizing: border-box;
+        }
+        
+        .tab-bar {
+            display: flex; gap: 20px; 
+            font-weight: 700; font-size: 1.1rem;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            color: rgba(255,255,255,0.7);
+        }
+        .active-tab { 
+            color: #fff;
+            border-bottom: 2px solid #fff; 
+            padding-bottom: 4px; 
+        }
+
+        /* App Container */
         #app-container { flex: 1; position: relative; width: 100%; height: 100%; background: #000; }
-        .video-card { width: 100%; height: 100%; position: absolute; top: 0; left: 0; background-color: #eee; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
-        .bg-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
-        .gradient-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); z-index: 1; }
-        .video-ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
-        .video-duration { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.4); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; backdrop-filter: blur(4px); }
-        .sound-disc { position: absolute; bottom: 130px; right: 20px; width: 45px; height: 45px; background: #222; border: 2px solid #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; z-index: 5; animation: spin 4s linear infinite; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>'); background-repeat: no-repeat; background-position: center; }
-        .music-note { position: absolute; bottom: 150px; right: 20px; color: rgba(255,255,255,0.8); font-size: 20px; animation: floatNote 2s linear infinite; z-index: 4; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes floatNote { 0% { transform: translate(0, 0) rotate(0deg); opacity: 0; } 50% { opacity: 1; } 100% { transform: translate(-20px, -40px) rotate(-20deg); opacity: 0; } }
-        .info-overlay { position: relative; margin-bottom: 90px; z-index: 2; padding: 20px; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5); max-width: 75%; }
-        .username { font-weight: 700; font-size: 1.05rem; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
-        .avatar { width: 42px; height: 42px; border-radius: 50%; border: 2px solid white; background-size: cover; background-position: center; background-color: #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .description { font-size: 1rem; line-height: 1.4; margin-bottom: 12px; font-weight: 400; }
-        .tags-container { display: flex; gap: 8px; flex-wrap: wrap; }
-        .tag { background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(10px); color: #fff; padding: 5px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
-        .side-actions { position: absolute; right: 10px; bottom: 200px; display: flex; flex-direction: column; gap: 20px; align-items: center; z-index: 5; }
-        .side-icon { font-size: 2rem; color: white; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); transition: transform 0.1s; }
-        .icon-label { font-size: 0.8rem; color: white; font-weight: 600; margin-top: -15px; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
-        .actions { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: center; gap: 60px; z-index: 20; }
-        .btn { width: 70px; height: 70px; border-radius: 50%; border: none; font-size: 2rem; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: transform 0.1s; box-shadow: 0 5px 20px rgba(0,0,0,0.2); background: rgba(255,255,255,0.95); backdrop-filter: blur(5px); }
-        .btn:active { transform: scale(0.95); }
+
+        /* Video Card */
+        .video-card {
+            width: 100%; height: 100%; position: absolute; top: 0; left: 0;
+            background-color: #333;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            overflow: hidden;
+        }
+        
+        .bg-image {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; z-index: 0;
+        }
+
+        /* Gradient Overlay */
+        .gradient-overlay {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 60%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        /* Video UI Layer - Container für Icons über dem Video */
+        .video-ui-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
+            pointer-events: none;
+        }
+        
+        .video-duration {
+            position: absolute; top: 20px; right: 20px;
+            background: rgba(0,0,0,0.4); color: white;
+            padding: 4px 8px; border-radius: 4px;
+            font-size: 0.8rem; font-weight: 600;
+            backdrop-filter: blur(4px);
+            margin-top: 50px; /* Platz für Header */
+        }
+
+        /* Info Text */
+        .info-overlay {
+            position: absolute; bottom: 20px; left: 20px; right: 90px;
+            z-index: 3; color: white; text-align: left;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+        .username { font-weight: 700; font-size: 1.1rem; margin-bottom: 8px; display: block; }
+        .description { font-size: 0.95rem; line-height: 1.4; margin-bottom: 10px; }
+        .tags-container { display: flex; flex-wrap: wrap; gap: 6px; }
+        .tag { font-weight: 600; font-size: 0.9rem; }
+
+        /* Side Icons */
+        .side-actions {
+            position: absolute; bottom: 100px; right: 10px;
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
+            z-index: 10;
+        }
+        .side-icon {
+            font-size: 2rem; color: white; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+            transition: transform 0.1s;
+        }
+        .icon-label {
+            font-size: 0.8rem; font-weight: 600; color: white; margin-top: -5px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+
+        /* Controls (Buttons) */
+        .actions {
+            position: absolute; bottom: 30px; left: 0; right: 0;
+            display: flex; justify-content: center; gap: 40px;
+            z-index: 20;
+        }
+        .btn {
+            width: 70px; height: 70px; border-radius: 50%; border: none;
+            font-size: 2rem; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+            background: white; transition: transform 0.1s;
+        }
+        .btn:active { transform: scale(0.9); }
         .btn-skip { color: #333; }
         .btn-like { color: #ed4956; }
+
+        /* SCREENS & UTILS */
+        .hidden { display: none !important; }
         
+        .screen {
+            background: #ffffff;
+            width: 100%; height: 100%; position: absolute; top: 0; left: 0;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 40px; box-sizing: border-box; z-index: 2000;
+        }
+
+        h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 10px; color: #262626; }
+        p { color: #8e8e8e; line-height: 1.5; font-size: 1rem; max-width: 500px; margin-bottom: 30px;}
+
+        /* Profile Selection */
+        .profile-list { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 320px; }
+        .profile-card {
+            background: #f8f8f8; border: 1px solid #dbdbdb; border-radius: 12px;
+            padding: 15px 20px; display: flex; align-items: center; gap: 15px;
+            cursor: pointer; transition: transform 0.1s;
+        }
+        .profile-card:active { transform: scale(0.98); background: #f0f0f0; }
+        .p-icon { font-size: 2rem; }
+        .p-title { font-weight: 700; font-size: 1.1rem; color: #262626; }
+
+        /* Result Screen Styles */
+        .btn-start { 
+            background-color: #0095f6; color: white; border: none; border-radius: 4px; 
+            padding: 10px 40px; font-weight: 600; font-size: 1rem; 
+            box-shadow: 0 2px 5px rgba(0,149,246,0.3); cursor: pointer;
+        }
+        .data-code { 
+            font-family: monospace; background: #f0f0f0; padding: 20px; 
+            color: #262626; font-size: 1.2rem; margin: 20px 0 10px 0; 
+            border: 1px solid #dbdbdb; border-radius: 6px; user-select: all; 
+        }
+
         /* Demo Overlay */
         #demo-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 100;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            color: white; text-align: center; padding: 20px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 3000;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
         }
-        .demo-box { background: #333; padding: 30px; border-radius: 12px; max-width: 400px; border: 1px solid #555; }
+        .demo-box {
+            background: white; border-radius: 16px; padding: 30px; max-width: 400px; text-align: center;
+        }
+        .demo-box h2 { margin-top: 0; }
+        .demo-btn {
+            background: #0095f6; color: white; border: none; padding: 12px 30px; 
+            border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -54,23 +187,41 @@
         </div>
     </header>
 
-    <!-- DEMO CARD -->
-    <div id="app-container">
+    <!-- INTRO SCREEN -->
+    <div id="intro-screen" class="screen">
+        <div style="font-size: 3.5rem; margin-bottom: 10px;">👋</div>
+        <h1>Profil wählen</h1>
+        <p style="margin-bottom: 25px;">Wähle ein Test-Profil für das Beispiel.</p>
+        
+        <div class="profile-list">
+            <div class="profile-card" onclick="startDemo()">
+                <div class="p-icon">1️⃣</div>
+                <div class="p-info"><span class="p-title">Profil 1</span></div>
+            </div>
+            <div class="profile-card" onclick="startDemo()">
+                <div class="p-icon">2️⃣</div>
+                <div class="p-info"><span class="p-title">Profil 2</span></div>
+            </div>
+            <div class="profile-card" onclick="startDemo()">
+                <div class="p-icon">3️⃣</div>
+                <div class="p-info"><span class="p-title">Profil 3</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEED CONTAINER -->
+    <div id="app-container" class="hidden">
         <div class="video-card">
             <img src="demo.jpg" class="bg-image" onerror="this.style.display='none'; document.body.style.background='#333';">
             <div class="gradient-overlay"></div>
             
+            <!-- Video UI Layer: Exakt positioniert wie in echter Sim, ohne Musik -->
             <div class="video-ui-layer">
                 <div class="video-duration">0:12</div>
-                <div class="sound-disc"></div>
-                <div class="music-note">🎵</div>
             </div>
 
             <div class="info-overlay">
-                <span class="username">
-                    <div class="avatar" style="background-image: url('demouser.jpg')"></div> 
-                    CatContent_Daily
-                </span>
+                <span class="username">CatContent_Daily</span>
                 <div class="description">Cuddle time! 😻☀️ So cute... #Cats #Morning #Cute</div>
                 <div class="tags-container">
                     <span class="tag">#Cats</span>
@@ -82,7 +233,7 @@
     </div>
 
     <!-- Side Icons -->
-    <div id="side-ui" class="side-actions">
+    <div id="side-ui" class="side-actions hidden">
         <div class="side-icon">❤</div>
         <span class="icon-label">420k</span>
         <div class="side-icon">💬</div>
@@ -92,23 +243,74 @@
     </div>
 
     <!-- Controls -->
-    <div id="controls" class="actions">
-        <button class="btn btn-skip" onclick="alert('In der echten App würdest du jetzt zum nächsten Video swipen (0 eingetragen).')">✖</button>
-        <button class="btn btn-like" onclick="alert('In der echten App würde das als Like (1) gespeichert.')">♥</button>
+    <div id="controls" class="actions hidden">
+        <button class="btn btn-skip" onclick="finishDemo()">✖</button>
+        <button class="btn btn-like" onclick="finishDemo()">♥</button>
     </div>
 
     <!-- START OVERLAY -->
-    <div id="demo-overlay">
+    <div id="demo-overlay" class="hidden">
         <div class="demo-box">
-            <h1 style="margin-top:0">Demo-Modus</h1>
-            <p style="color:#ccc; margin-bottom:20px;">
-                Stell dir vor, dein Profil ist: <br><strong style="color:white; font-size:1.2rem;">"Pet Lover"</strong>.
-                <br><br>
-                Würdest du dieses Video liken oder wegswipen?
-            </p>
-            <button style="background:#0095f6; color:white; border:none; padding:10px 20px; font-size:1.1rem; border-radius:5px; cursor:pointer;" onclick="document.getElementById('demo-overlay').style.display='none'">Zur Demo</button>
+            <h2>📱 Beispiel-Demo</h2>
+            <p>Hier siehst du ein typisches Video im Feed. Du kannst auf <strong>♥ Liken</strong> oder <strong>✖ Überspringen</strong> tippen.</p>
+            <p>In der echten Simulation werden deine Entscheidungen gespeichert.</p>
+            <button class="demo-btn" onclick="document.getElementById('demo-overlay').classList.add('hidden')">Verstanden</button>
         </div>
     </div>
 
+    <!-- RESULT SCREEN -->
+    <div id="result-screen" class="screen hidden">
+        <div style="font-size: 4rem; margin-bottom: 10px; color: #0095f6;">✅</div>
+        <h1>Fertig!</h1>
+        <p>Deine Ergebnisse sind bereit. Kopiere die Ergebnisse mit Klick auf den Button und füge sie in die Tabelle "Auswertung - SocialMedia-Simulation" ein.</p>
+        
+        <!-- Code Display -->
+        <div class="data-code" id="outputCode">Creator:1-0-1-1-0-0</div>
+        
+        <!-- Copy Button -->
+        <button id="copyBtn" class="btn-start" onclick="copyToClipboard()" style="margin-bottom: 15px;">Code kopieren</button>
+        
+        <button class="btn-start" style="background: white; color: #262626; border: 1px solid #dbdbdb;" onclick="location.reload()">Neustart</button>
+    </div>
+
+    <script>
+        function startDemo() {
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('app-container').classList.remove('hidden');
+            document.getElementById('side-ui').classList.remove('hidden');
+            document.getElementById('controls').classList.remove('hidden');
+            document.getElementById('demo-overlay').classList.remove('hidden');
+        }
+
+        function finishDemo() {
+            document.getElementById('app-container').classList.add('hidden');
+            document.getElementById('side-ui').classList.add('hidden');
+            document.getElementById('controls').classList.add('hidden');
+            document.getElementById('demo-overlay').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('outputCode').innerText;
+            const btn = document.getElementById('copyBtn');
+            
+            if(navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(function() {
+                    // Visuelles Feedback
+                    const originalText = btn.innerText;
+                    btn.innerText = "Kopiert! ✅";
+                    btn.style.backgroundColor = "#27c4f5"; 
+                    
+                    setTimeout(function() {
+                        btn.innerText = "Code kopieren";
+                        btn.style.backgroundColor = ""; 
+                    }, 2000);
+                });
+            } else {
+                // Fallback
+                alert("Bitte manuell kopieren: " + text);
+            }
+        }
+    </script>
 </body>
 </html>
